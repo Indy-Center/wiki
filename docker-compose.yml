@@ -1,0 +1,16 @@
+version: "3"
+services:
+  wiki:
+    build:
+      context: . # Points to the directory with Dockerfile and modules folder
+    environment:
+      DB_TYPE: sqlite
+      DB_FILEPATH: /wiki/data/database.sqlite
+    restart: unless-stopped
+    ports:
+      - "80:3000"
+    volumes:
+      - db-data:/wiki/data # Persistent storage for SQLite database
+
+volumes:
+  db-data:

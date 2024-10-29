@@ -1,0 +1,11 @@
+key: example
+title: Example Comments Provider
+description: This is an example comments provider module to show that it's being loaded into the application.
+author: Steve Crow
+logo: https://static.requarks.io/logo/example.svg
+website: https://example.com/
+codeTemplate: true
+isAvailable: true
+props:
+  firstExampleProperty: String
+  secondExampleProperty: Number
