@@ -24,4 +24,4 @@ jobs:
 
       - name: Deploy with Docker Compose
         run: |
-          ssh deploy@your-vps-ip "cd /home/docker/wiki && docker-compose pull && docker-compose up -d --build"
+          ssh docker@apps.zidartcc.org "cd /home/docker/wiki && docker-compose pull && docker-compose up -d --build"
