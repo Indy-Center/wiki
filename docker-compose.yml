@@ -12,16 +12,12 @@ services:
       - frontend
     labels:
       - traefik.enable=true
-      - traefik.http.routers.wiki-http.rule=Host(`wiki.apps.zidartcc.org`)
       - traefik.http.routers.wiki-http.rule=Host(`docs1.zidartcc.org`)
       - traefik.http.routers.wiki-http.entrypoints=web
-      - traefik.http.services.wiki-http.loadbalancer.server.url=http://wiki.app.domain.com"
       - traefik.http.routers.wiki-https.tls=true
       - traefik.http.routers.wiki-https.tls.certresolver=cloudflare
       - traefik.http.routers.wiki-https.entrypoints=websecure
-      - traefik.http.routers.wiki-https.rule=Host(`wiki.apps.zidartcc.org`)
       - traefik.http.routers.wiki-https.rule=Host(`docs1.zidartcc.org`)
-      - traefik.http.services.wiki-https.loadbalancer.server.url=http://wiki.app.domain.com"
     ports:
       - '3000'
     volumes:
