@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 services:
   wiki:
     build:
@@ -6,11 +6,25 @@ services:
     environment:
       DB_TYPE: sqlite
       DB_FILEPATH: /wiki/data/database.sqlite
+    container_name: wiki
     restart: unless-stopped
+    networks:
+      - frontend
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.wiki-http.rule=Host(`wiki.app.zidartcc.org`)
+      - traefik.http.routers.wiki-http.entrypoints=web
+      - traefik.http.routers.wiki-https.tls=true
+      - traefik.http.routers.wiki-https.tls.certresolver=cloudflare
+      - traefik.http.routers.wiki-https.entrypoints=websecure
+      - traefik.http.routers.wiki-https.rule=Host(`wiki.app.zidartcc.org`)
     ports:
-      - "80:3000"
+      - '80:3000'
     volumes:
       - db-data:/wiki/data # Persistent storage for SQLite database
 
 volumes:
   db-data:
+networks:
+  frontend:
+    external: true
