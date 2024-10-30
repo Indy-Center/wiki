@@ -28,7 +28,7 @@ jobs:
 
       - name: Copy Files to VPS
         run: |
-          scp -r ./* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/docker/wiki
+          rsync -av ./* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/docker/wiki
 
       - name: Deploy with Docker Compose
         run: |
