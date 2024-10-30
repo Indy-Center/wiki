@@ -11,7 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: install ssh keys
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install SSH Keys
         # check this thread to understand why its needed:
         # https://stackoverflow.com/a/70447517
         run: |
@@ -19,8 +22,9 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
 
-      - name: connect and pull
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.PROD_DIR }} && git checkout main && git pull && exit"
+      - name: Copy Files to VPS
+        run: |
+          scp -r . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.PROD_DIR }}/wiki
 
       - name: Deploy with Docker Compose
         run: |
