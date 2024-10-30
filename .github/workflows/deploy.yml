@@ -20,7 +20,7 @@ jobs:
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
 
       - name: connect and pull
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /home/docker/wiki && git checkout ${{ secrets.main }} && git pull && exit"
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /home/docker/wiki && git checkout main && git pull && exit"
 
       - name: Deploy with Docker Compose
         run: |
