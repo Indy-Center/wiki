@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
@@ -20,8 +20,8 @@ jobs:
 
       - name: Copy Files to VPS
         run: |
-          scp -r . docker@apps.zidartcc.org:/home/docker/wiki
+          scp -r . docker-user@apps.zidartcc.org:/home/docker/wiki
 
       - name: Deploy with Docker Compose
         run: |
-          ssh docker@apps.zidartcc.org "cd /home/docker/wiki && docker-compose pull && docker-compose up -d --build"
+          ssh docker-user@apps.zidartcc.org "cd /home/docker/wiki && docker-compose pull && docker-compose up -d --build"
