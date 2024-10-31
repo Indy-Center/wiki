@@ -12,11 +12,13 @@ services:
       - frontend
     labels:
       - traefik.enable=true
-      - traefik.http.routers.wiki-http.rule=Host(`docs1.zidartcc.org`)
+      - traefik.http.routers.wiki-http.rule=Host(`wiki.zidartcc.org`)
+      # - traefik.http.routers.wiki-http.rule=Host(`docs.zidartcc.org`) #uncomment for implementation after adding info to the resources path.
       - traefik.http.routers.wiki-http.entrypoints=web
       - traefik.http.routers.wiki-https.tls=true
       - traefik.http.routers.wiki-https.entrypoints=websecure
-      - traefik.http.routers.wiki-https.rule=Host(`docs1.zidartcc.org`)
+      - traefik.http.routers.wiki-https.rule=Host(`wiki.zidartcc.org`)
+      # - traefik.http.routers.wiki-https.rule=Host(`docs.zidartcc.org`) #uncomment for implementation after adding info to the resources path.
     ports:
       - '3000'
     volumes:
