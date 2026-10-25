@@ -3,6 +3,7 @@
 The Indy Center Wiki at [wiki.flyindycenter.com](https://wiki.flyindycenter.com): the official [Wiki.js](https://js.wiki/) 2 image, run on ALEXANDRIA behind its Traefik, with the wiki's data in Docker volumes and backed up nightly.
 
 [![Build and Deploy](https://github.com/Indy-Center/wiki/actions/workflows/build-and-deploy.yml/badge.svg)](https://github.com/Indy-Center/wiki/actions/workflows/build-and-deploy.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Pages, uploaded files, users, groups, sign-in settings (OAuth2, with its client secret) and the wiki's own sign-in keys all live in its SQLite database. Editors change the wiki in the wiki itself, not here: this repository holds only how it runs.
 
@@ -95,6 +96,10 @@ On empty volumes, as on its first deploy, Wiki.js shows its setup page to whoeve
 The image is pinned to Wiki.js 2.5.305 by tag and digest, so a deploy never upgrades it by surprise. Wiki.js migrates its database on start and can't go back, and its next major version drops SQLite, so never move it to `latest` or `3`. Upgrading is a change to the image line: the tag and its digest together, after `backups now wiki` on the server, as `deploy`.
 
 A deploy that changes `deploy/docker-compose.yml` recreates the container, so the wiki is down for the minute it takes to start.
+
+## Licence
+
+This repository's own files are MIT-licensed: see [LICENSE](LICENSE). Wiki.js itself is AGPL-3.0; it runs here from its official image, unchanged, and none of its code is in this repository.
 
 ## Disclaimer
 
