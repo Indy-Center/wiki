@@ -14,9 +14,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Shell scripts pass shellcheck
+        run: shellcheck deploy/*.sh tests/*.sh
+
       - name: Compose file is valid
         run: docker compose -f deploy/docker-compose.yml config -q
 
-      # Fails on a mistyped image or tag before it reaches the VPS.
+      # Fails on a mistyped image or tag before it reaches the VPS. data-tools uses the same image.
       - name: Images exist
         run: docker compose -f deploy/docker-compose.yml pull --quiet
+
+      # Starts the wiki on empty volumes, sets it up, makes a page, backs up, wipes, restores.
+      - name: Back up, wipe and restore
+        run: bash tests/backup-round-trip.sh

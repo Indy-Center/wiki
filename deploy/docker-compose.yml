@@ -6,7 +6,7 @@ services:
     # Pinned to the version the live wiki ran when it moved (2.5.305), tag and digest together, so a deploy never
     # upgrades it by surprise: Wiki.js migrates its database on start and can't go back. Never a floating tag:
     # Wiki.js's next major version drops SQLite. Upgrade by changing this line, after `backups now wiki`.
-    image: ghcr.io/requarks/wiki:2.5.305@sha256:707fa8f0c739d098346eff46af4ef3e71f10df88b0b49785c70b4cf0075274d5
+    image: &image ghcr.io/requarks/wiki:2.5.305@sha256:707fa8f0c739d098346eff46af4ef3e71f10df88b0b49785c70b4cf0075274d5
     restart: unless-stopped
     init: true
     # .env is written on the VPS by the deploy from the repo's ENV_* secrets and variables; it's never in git.
@@ -40,6 +40,18 @@ services:
       options:
         max-size: 10m
         max-file: '5'
+
+  # Throwaway container for backup.sh and restore.sh, with the wiki's volumes and no network; never started
+  # by `up`. The wiki's own image, which has sqlite3, run as root so it can read and set any file's owner.
+  data-tools:
+    image: *image
+    profiles: [tools]
+    user: root
+    network_mode: none
+    volumes:
+      - db-data:/wiki/data
+      - content:/wiki/data/content
+      - backups:/wiki/backups
 
 networks:
   traefik-shared:
