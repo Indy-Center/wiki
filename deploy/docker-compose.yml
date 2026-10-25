@@ -1,0 +1,51 @@
+# Wiki.js, deployed to /home/deploy/apps/wiki/ on ALEXANDRIA. build-and-deploy.yml rsyncs deploy/ there,
+# so the compose project is named after the repo, and its volumes are wiki_db-data and so on.
+# Renaming the repo renames the project and its volumes; the old volumes stay behind.
+services:
+  wiki:
+    # Pinned to the version the live wiki ran when it moved (2.5.305), tag and digest together, so a deploy never
+    # upgrades it by surprise: Wiki.js migrates its database on start and can't go back. Never a floating tag:
+    # Wiki.js's next major version drops SQLite. Upgrade by changing this line, after `backups now wiki`.
+    image: ghcr.io/requarks/wiki:2.5.305@sha256:707fa8f0c739d098346eff46af4ef3e71f10df88b0b49785c70b4cf0075274d5
+    restart: unless-stopped
+    init: true
+    # .env is written on the VPS by the deploy from the repo's ENV_* secrets and variables; it's never in git.
+    # deploy/.env.example lists the names (none yet).
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DB_TYPE: sqlite
+      DB_FILEPATH: /wiki/data/database.sqlite
+    volumes:
+      # The database, and the cache and temporary folders Wiki.js makes beside it.
+      - db-data:/wiki/data
+      # The image declares this folder a volume. Named here so a redeploy reuses it instead of leaving it
+      # behind as an unnamed one.
+      - content:/wiki/data/content
+      # Where the Local File System storage target (Admin → Storage) writes its copy of the pages. A copy
+      # of what is in the database, so not in the backup.
+      - backups:/wiki/backups
+    networks:
+      - traefik-shared # reachable by Traefik
+    labels:
+      - traefik.enable=true
+      # Router names are global across every app on the box; prefix them with the app's name.
+      - traefik.http.routers.wiki.rule=Host(`wiki.flyindycenter.com`)
+      - traefik.http.routers.wiki.entrypoints=websecure
+      - traefik.http.routers.wiki.tls=true
+      - traefik.http.services.wiki.loadbalancer.server.port=3000
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '5'
+
+networks:
+  traefik-shared:
+    external: true
+
+volumes:
+  db-data:
+  content:
+  backups:
